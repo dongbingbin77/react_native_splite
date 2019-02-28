@@ -1,6 +1,7 @@
 package com.split;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
@@ -53,11 +54,13 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    BlankFragment blankFragment;
+
     public void onAddFragment(View view){
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-
-        transaction.add(R.id.fragments,new BlankFragment());
+        blankFragment = new BlankFragment();
+        transaction.add(R.id.fragments,blankFragment);
         transaction.commit();
     }
 
@@ -66,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
             BlankFragment.rootView.unmountReactApplication();
             ((MainApplication)getApplication()).getReactNativeHost().getReactInstanceManager().onHostDestroy();
             BlankFragment.rootView = null;
+
+
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            //transaction.
+            transaction.detach(blankFragment);
+            transaction.commit();
         }
         ((ReactApplication)getApplication()).getReactNativeHost().getReactInstanceManager().destroy();
         Toast.makeText(getApplicationContext(), "ReactContext已卸载完成~", Toast.LENGTH_LONG).show();
